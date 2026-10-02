@@ -3,14 +3,15 @@
 An interactive 3D illustration of **“AI-Research Agents in the Wild. From GitHub and arXiv to Regularities and Gaps”**
 (Aleksey Komissarov & Andrey Ustyuzhanin, [arXiv:2609.11975](https://arxiv.org/abs/2609.11975)). Built from the public paper (including Supplementary Tables S1–S3); two plaza tables are recounted from the authors' compendium of coded evidence cards — see [DATA-PROVENANCE.md](DATA-PROVENANCE.md).
 
-Open `index.html` (or the GitHub Pages site of this repository) and press **▶ Tour** for an 8-stop guided story:
+Open `index.html` (or the GitHub Pages site of this repository) and press **▶ Tour** for a 9-stop guided story:
 Space / → next, ← back, Esc exit; `#tour=N` links straight to a stop.
 
 ## How to read the map
 | On the map | Meaning |
 | :--- | :--- |
-| **Districts** (south → north) | The paper's own Figure 1: 1 · the population, 2 · the design space, 3 · the theory on trial, 4 · papers ↔ code — each labelled with its thesis |
-| 🏢 **Skyscraper** | A repository or agent system from the studied ecosystem |
+| **Districts** (south → north) | 1 · the population, 2 · the design space and its lineages, 3 · failure modes, 4 · the theory on trial, 5 · papers ↔ code — each labelled with its thesis |
+| 🏢 **Skyscraper** | A repository, agent system or lineage from the studied ecosystem |
+| 💥 **Leaning tower** | A promoted antipattern (failure mode); height = repositories showing it |
 | ⛪ **Cathedral** | The study's corpora and knowledge: registries, lineages, the pattern compendium |
 | 🔭 **Observatory** | The study's instruments: coding, checks, audits, scores |
 | 📡 **TV tower** | Intake channels through which records entered the registry |
