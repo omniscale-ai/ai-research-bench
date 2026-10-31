@@ -577,6 +577,10 @@
       color: #ffffff;
     }
 
+    .spire-links { display: flex; flex-wrap: wrap; gap: 8px; margin: 12px 0 4px; }
+    .spire-link { display: inline-flex; align-items: center; gap: 6px; padding: 7px 12px; border-radius: 8px; border: 1px solid rgba(0, 240, 255, 0.5);
+      background: rgba(0, 240, 255, 0.08); color: #00f0ff; font-family: var(--font-mono); font-size: 11.5px; font-weight: 700; text-decoration: none; }
+    .spire-link:hover { background: rgba(0, 240, 255, 0.18); }
     .drawer-body-text {
       font-size: 13px;
       line-height: 1.6;
@@ -925,12 +929,45 @@
     .challenge-short { font-weight: 600; color: #dfe6f5; }
     .tour-look { margin: 0 0 10px; font-family: var(--font-mono); font-size: 11px; color: #ffcf66; }
     .tour-look:empty { display: none; }
+    /* Narrated tour: the line being spoken, with its speaker */
+    .tour-sub { display: none; margin: 4px 0 10px; padding: 8px 10px; border-radius: 8px; background: rgba(255, 255, 255, 0.05); font-size: 14px; line-height: 1.5; color: #fff; }
+    body.narrating .tour-sub { display: block; }
+    body.narrating .tour-text { display: none; }
+    body.quizzing .tour-sub { border: 1px dashed #ffcf66; }
+    body.quizzing .tour-sub::after { content: '👆 Answer by clicking on the map — or Next to skip'; display: block; margin-top: 6px; font-family: var(--font-mono); font-size: 10.5px; color: #ffcf66; }
+    .tour-sub-who { display: block; font-family: var(--font-mono); font-size: 10.5px; font-weight: 800; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 2px; }
+    #listenBtn, #orbitBtn, #tourBtn { white-space: nowrap; }
+    .tour-listen { font-family: var(--font-mono); font-size: 11px; }
+    .tour-listen.active { color: #0a0f1c; background: #7cffb2; border-color: #7cffb2; }
+    /* #listen deep link: one click to allow sound */
+    .listen-gate { position: absolute; inset: 0; z-index: 40; display: none; align-items: center; justify-content: center; background: rgba(5, 8, 16, 0.55); }
+    .listen-gate.open { display: flex; }
+    .listen-gate button { font-family: var(--font-mono); font-size: 16px; font-weight: 800; padding: 16px 28px; border-radius: 12px; cursor: pointer;
+      color: #0a0f1c; background: #7cffb2; border: none; box-shadow: 0 0 30px rgba(124, 255, 178, 0.5); }
+
+    /* Talk to the city (level 3): a live voice agent that points at the map */
+    .talk-panel { position: absolute; right: 24px; bottom: 96px; width: min(340px, calc(100vw - 32px)); z-index: 26; display: none;
+      background: rgba(8, 12, 24, 0.94); border: 1px solid rgba(0, 240, 255, 0.45); border-radius: 12px; padding: 12px 14px;
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.55); backdrop-filter: blur(10px); }
+    body.talking .talk-panel { display: block; }
+    .talk-head { display: flex; align-items: center; gap: 8px; font-family: var(--font-mono); font-size: 11px; font-weight: 800; color: #00f0ff; letter-spacing: 1px; }
+    .talk-dot { width: 10px; height: 10px; border-radius: 50%; background: #8a9bb8; flex: none; }
+    .talk-panel[data-mode="listening"] .talk-dot { background: #7cffb2; box-shadow: 0 0 10px #7cffb2; }
+    .talk-panel[data-mode="speaking"] .talk-dot { background: #00f0ff; box-shadow: 0 0 10px #00f0ff; animation: talkPulse 0.9s ease-in-out infinite; }
+    @keyframes talkPulse { 50% { transform: scale(1.35); } }
+    .talk-status { flex: 1; }
+    .talk-line { margin-top: 8px; font-size: 13.5px; line-height: 1.5; color: #fff; min-height: 1.5em; }
+    .talk-you { margin-top: 6px; font-size: 12px; color: var(--text-muted); font-style: italic; }
+    .talk-you:empty, .talk-line:empty { display: none; }
+    #talkBtn.pulse { animation: askPulse 1s ease-in-out 12; border-color: #00f0ff; color: #00f0ff; }
+    @keyframes askPulse { 50% { box-shadow: 0 0 0 6px rgba(0, 240, 255, 0.35), 0 0 24px rgba(0, 240, 255, 0.8); transform: translateY(-2px); } }
+    #talkBtn.active { color: #0a0f1c; background: #00f0ff; border-color: #00f0ff; }
     .tour-nav { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
     .tour-dots { display: flex; gap: 6px; }
     .tour-dot { width: 9px; height: 9px; border-radius: 50%; background: rgba(255, 255, 255, 0.2); cursor: pointer; }
     .tour-dot.active { background: #7cffb2; box-shadow: 0 0 8px #7cffb2; }
-    body.touring .maplibregl-marker:not(.tour-focus) { opacity: 0.12; transition: opacity 0.4s ease; }
-    body.touring .maplibregl-marker.tour-focus { opacity: 1; transition: opacity 0.4s ease; }
+    body.touring .maplibregl-marker:not(.tour-focus), body.spotlight .maplibregl-marker:not(.tour-focus) { opacity: 0.12; transition: opacity 0.4s ease; }
+    body.touring .maplibregl-marker.tour-focus, body.spotlight .maplibregl-marker.tour-focus { opacity: 1; transition: opacity 0.4s ease; }
     body.touring .hud-footer .scale-axis-strip { opacity: 0.35; }
 
     /* Data plazas */
@@ -1014,10 +1051,52 @@
     .route-incident.field { color: #dfe6f5; }
     .route-incident.status { color: #ffd08a; }
     .route-close { float: right; background: none; border: none; color: var(--text-muted); cursor: pointer; font-size: 14px; }
+
+    /* ===== Metro view ===== */
+    .metro-view { position: absolute; inset: 0; z-index: 6; display: none; background: #0a0f1c; cursor: grab; }
+    .metro-view.dragging { cursor: grabbing; }
+    body.metro .metro-view { display: block; }
+    body.touring .metro-legend { display: none; }
+    body.metro .hud-layers-panel, body.metro #scaleBtn, body.metro #routeBtn, body.metro #orbitBtn,
+    body.metro #resetCamBtn, body.metro .scale-axis-strip { display: none !important; }
+    #metroSvg { width: 100%; height: 100%; display: block; }
+    .view-switch { display: flex; gap: 4px; margin-right: 10px; align-self: center; pointer-events: auto; }
+    .view-switch button {
+      cursor: pointer; font-family: var(--font-mono); font-size: 11px; font-weight: 700; color: #dfe6f5;
+      background: rgba(10, 16, 32, 0.85); border: 1px solid rgba(255,255,255,0.18); border-radius: 8px; padding: 6px 10px;
+    }
+    .view-switch button.active { border-color: var(--accent-cyan); color: var(--accent-cyan); background: rgba(0, 240, 255, 0.12); }
+    .metro-station { cursor: pointer; }
+    .metro-station:hover .m-dot { stroke-width: 6; }
+    .metro-station-label { cursor: pointer; }
+    .metro-ic, .metro-ic-g { cursor: pointer; }
+    .metro-legend {
+      position: absolute; left: 20px; top: 140px; z-index: 3; display: flex; flex-direction: column; gap: 6px;
+      background: #0a0f1c; border: 1px solid rgba(255,255,255,0.14); border-radius: 10px; padding: 10px 12px; box-shadow: 0 6px 24px rgba(0,0,0,0.5);
+      max-width: 300px;
+    }
+    .metro-legend-item { display: flex; align-items: center; gap: 10px; cursor: pointer; font-family: var(--font-mono); font-size: 11px; font-weight: 700; color: #e8ecf5; }
+    .metro-legend-item:hover { color: #ffffff; }
+    .metro-legend-bar { width: 26px; height: 7px; border-radius: 4px; flex: none; }
+    .metro-legend-sub { display: block; font-weight: 500; color: var(--text-muted); font-size: 10px; }
+    .metro-legend-ic { margin-top: 4px; padding-top: 6px; border-top: 1px solid rgba(255,255,255,0.1); }
+    .metro-ic:hover { stroke: var(--accent-cyan); }
+    .metro-ic.m-selected { stroke: var(--accent-cyan); stroke-width: 6; }
+    .ic-member { display: flex; align-items: center; gap: 8px; margin-top: 6px; font-size: 12.5px; }
+    .ic-line-dot { width: 10px; height: 10px; border-radius: 50%; flex: none; }
+    body.touring .metro-station-label:not(.m-focus), body.spotlight .metro-station-label:not(.m-focus) { opacity: 0.25; }
+    .metro-label { font-family: 'Inter', system-ui, sans-serif; font-size: 12px; font-weight: 600; fill: #e8ecf5; paint-order: stroke; stroke: #0a0f1c; stroke-width: 4px; }
+    .metro-sub { font-family: 'JetBrains Mono', monospace; font-size: 10px; fill: #8a9bb8; paint-order: stroke; stroke: #0a0f1c; stroke-width: 3px; }
+    .metro-line-name { font-family: 'JetBrains Mono', monospace; font-size: 12px; font-weight: 800; letter-spacing: 1px; }
+    .metro-ic-label { font-family: 'JetBrains Mono', monospace; font-size: 11px; font-weight: 800; fill: #ffffff; paint-order: stroke; stroke: #0a0f1c; stroke-width: 4px; }
+    body.touring .metro-station:not(.m-focus), body.touring .metro-line:not(.m-focus),
+    body.spotlight .metro-station:not(.m-focus), body.spotlight .metro-line:not(.m-focus) { opacity: 0.18; }
+    .metro-station.m-selected .m-dot { stroke: #ffffff; stroke-width: 7; }
   </style>
 </head>
 <body>
   <div id="map"></div>
+  <div id="metroView" class="metro-view" aria-label="Metro map"><svg id="metroSvg" xmlns="http://www.w3.org/2000/svg"></svg><div id="metroLegend" class="metro-legend"></div></div>
   <div class="viewport-overlay"></div>
 
   <!-- TOP HUD BAR -->
@@ -1031,6 +1110,10 @@
     </div>
 
     <!-- LAYER VISIBILITY TOGGLES -->
+    <div class="view-switch" id="viewSwitch">
+      <button data-view="city" class="active" title="3D city">🏙 City</button>
+      <button data-view="metro" title="Schematic metro map">🚇 Metro</button>
+    </div>
     <div class="hud-layers-panel">
       <button class="layer-btn active" data-layer="districts" title="Toggle District Scale Zones">
         <span class="layer-dot" style="color: var(--accent-cyan);"></span>
@@ -1127,6 +1210,14 @@
         <span>▶</span>
         <span>Tour</span>
       </button>
+      <button id="listenBtn" class="control-action-btn" title="Narrated tour — two voices walk you through the map" style="display: none;">
+        <span>🎧</span>
+        <span>Listen</span>
+      </button>
+      <button id="talkBtn" class="control-action-btn" title="Talk to the city — ask anything out loud; the guide answers and points at the map" style="display: none; white-space: nowrap;">
+        <span>🎙</span>
+        <span>Ask</span>
+      </button>
       <button id="scaleBtn" class="control-action-btn" title="Building size: Alt/Option + scroll, or [ and ] keys. Click to reset.">
         <span>🏙️</span>
         <span id="scaleLabel">×1.00</span>
@@ -1150,13 +1241,24 @@
       <button class="route-close" id="tourCloseBtn" title="Exit tour (Esc)">✕</button>
     </div>
     <p id="tourText" class="tour-text"></p>
+    <p id="tourSub" class="tour-sub"><span id="tourSubWho" class="tour-sub-who"></span><span id="tourSubText"></span></p>
     <ul id="tourItems" class="tour-items"></ul>
     <p id="tourLook" class="tour-look"></p>
     <div class="tour-nav">
       <button id="tourPrevBtn" class="pager-btn">◀ Back</button>
       <div id="tourDots" class="tour-dots"></div>
+      <button id="tourListenBtn" class="pager-btn tour-listen" title="Narrated tour: play / pause (P)" style="display: none;">🔊 Listen</button>
       <button id="tourNextBtn" class="pager-btn">Next ▶</button>
     </div>
+  </section>
+
+  <div id="listenGate" class="listen-gate"><button id="listenGateBtn">🎧 Start the narrated tour</button></div>
+
+  <section id="talkPanel" class="talk-panel" data-mode="connecting">
+    <div class="talk-head"><span class="talk-dot"></span><span id="talkStatus" class="talk-status">CONNECTING…</span>
+      <button class="route-close" id="talkEndBtn" title="End the conversation">✕</button></div>
+    <div id="talkYou" class="talk-you"></div>
+    <div id="talkLine" class="talk-line"></div>
   </section>
 
   <!-- ROUTE (DIRECTIONS) PANEL -->
@@ -1271,13 +1373,19 @@
       return refs;
     }
 
+    let paintSaved = false;
     function saveTourPaint() {
+      if (paintSaved) return;
+      paintSaved = true;
       const save = (layer, prop) => { if (map.getLayer(layer)) tourSaved[`${layer}|${prop}`] = map.getPaintProperty(layer, prop); };
       ['buildings-3d', 'buildings-ghost'].forEach(l => save(l, 'fill-extrusion-color'));
       ['conduits-glow', 'conduits-core', 'conduits-core-thin', 'conduits-core-planned', 'targets-rings', 'targets-arcs', 'targets-dot'].forEach(l =>
         save(l, map.getLayer(l) && map.getLayer(l).type === 'fill' ? 'fill-opacity' : 'line-opacity'));
       PLAZAS.forEach(pz => save(`plaza-tex-${pz.id}`, 'raster-opacity'));
       save('plaza-bars', 'fill-extrusion-opacity');
+      save('districts-line', 'line-width');
+      save('conduits-arrows', 'icon-opacity');
+      save('districts-line', 'line-opacity');
     }
 
     function restoreTourPaint() {
@@ -1289,9 +1397,13 @@
 
     // Everything outside the stop's focus fades: building colours turn slate (opacity is
     // per layer in MapLibre, colour is per feature), roads and plazas dim, markers fade.
-    function applyTourFocus(stop) {
+    function applyTourFocus(stop) { applyFocus(stop.focus || []); }
+
+    function applyFocus(refs) {
       restoreTourPaint();
-      const focus = new Set(stop.focus || []);
+      const focus = new Set(refs);
+      const dists = refs.filter(r => r.startsWith('@dist-'));
+      window.SPIRES_INDEX.forEach(sp => { if (dists.includes(sp.district_ref)) focus.add(sp.id); });
       const list = [...focus];
       const dim = '#1c2333';
       const inFocus = key => ['in', ['get', key], ['literal', list]];
@@ -1309,6 +1421,7 @@
       ['targets-rings', 'targets-arcs'].forEach(layer => {
         if (map.getLayer(layer)) map.setPaintProperty(layer, 'line-opacity', ['case', inFocus('challenge_ref'), 0.9, 0.12]);
       });
+      if (map.getLayer('conduits-arrows')) map.setPaintProperty('conduits-arrows', 'icon-opacity', ['case', inFocus('id'), 1, 0.06]);
       if (map.getLayer('targets-dot')) map.setPaintProperty('targets-dot', 'fill-opacity', ['case', inFocus('challenge_ref'), 0.9, 0.15]);
       PLAZAS.forEach(pz => {
         const layer = `plaza-tex-${pz.id}`;
@@ -1317,6 +1430,10 @@
       if (map.getLayer('plaza-bars')) {
         const anyPlaza = PLAZAS.some(pz => focus.has(pz.id));
         map.setPaintProperty('plaza-bars', 'fill-extrusion-opacity', anyPlaza ? 0.85 : 0.2);
+      }
+      if (dists.length && map.getLayer('districts-line')) {
+        map.setPaintProperty('districts-line', 'line-width', ['case', inFocus('id'), 4, 1.5]);
+        map.setPaintProperty('districts-line', 'line-opacity', ['case', inFocus('id'), 1, 0.25]);
       }
       // a constraint in focus also lights up the spire it sits on; a spire lights its node chips
       document.querySelectorAll('.maplibregl-marker').forEach(el => {
@@ -1331,8 +1448,12 @@
       closeDrawer();
       stopOrbit();
       Object.entries(stop.plaza_layers || {}).forEach(([pid, layer]) => setPlazaLayer(pid, layer));
+      actionFocus = null;
+      clearPlazaCells();
+      document.body.classList.remove('spotlight');
       applyTourFocus(stop);
-      map.flyTo({ ...stop.camera, duration: 1600, essential: true, padding: { top: 60, bottom: 230, left: 360, right: 40 } });
+      map.flyTo({ ...stop.camera, duration: currentView === 'metro' ? 0 : 1600, essential: true, padding: { top: 60, bottom: 230, left: 360, right: 40 } });
+      if (currentView === 'metro') { highlightMetro(metroStationRefs(stop.focus || [])); focusMetro(metroStationRefs(stop.focus || [])); }
       document.getElementById('tourStep').textContent = `${tourIndex + 1} / ${TOUR.length}`;
       document.getElementById('tourTitle').textContent = stop.title;
       document.getElementById('tourText').textContent = stop.text;
@@ -1348,6 +1469,8 @@
       document.getElementById('tourPrevBtn').disabled = tourIndex === 0;
       document.getElementById('tourNextBtn').textContent = tourIndex === TOUR.length - 1 ? 'Finish ✓' : 'Next ▶';
       try { history.replaceState(null, '', `#tour=${tourIndex + 1}`); } catch (e) { /* file:// or sandboxed */ }
+      (stop.do || []).forEach(act);
+      playStopNarration();
     }
 
     let layersBeforeTour = null;
@@ -1368,17 +1491,378 @@
     function endTour() {
       if (tourIndex < 0) return;
       tourIndex = -1;
+      stopNarration();
+      actionFocus = null;
+      clearPlazaCells();
       restoreTourPaint();
       PLAZAS.forEach(pz => setPlazaLayer(pz.id, (pz.layers[0] || {}).id));
       document.body.classList.remove('touring');
       document.querySelectorAll('.maplibregl-marker.tour-focus').forEach(el => el.classList.remove('tour-focus'));
       document.getElementById('tourCard').classList.remove('open');
       document.getElementById('tourBtn').classList.remove('active');
+      if (currentView === 'metro') { highlightMetro([]); fitMetro(true); }
       if (layersBeforeTour) {
         Object.entries(layersBeforeTour).forEach(([key, visible]) => setLayerVisible(key, visible));
         layersBeforeTour = null;
       }
       try { history.replaceState(null, '', location.pathname + location.search); } catch (e) { /* ignore */ }
+    }
+
+    // ===== Actions: one vocabulary for the tour script, pre-voiced answers and the voice agent =====
+    // {show: ref | [refs]}   fly there and light only that; a district shows whole
+    // {open: ref}            open its card
+    // {tour: n}              go to stop n (1-based; 0 ends the tour)
+    // {view: 'city'|'metro'}
+    // {highlight: [refs]}    light only these, camera stays; [] goes back to the stop's focus
+    // {plaza_cell: {plaza, row, col}}  ring one cell (row/col as index or label); null clears
+    let actionFocus = null;      // refs lit by an action; null = the tour stop's own focus
+    const plazaCellMark = {};    // plaza id → {row, col}
+    const asList = v => (Array.isArray(v) ? v : v ? [v] : []);
+
+    function currentFocus() { return actionFocus || (tourIndex >= 0 ? TOUR[tourIndex].focus || [] : []); }
+
+    // Refs as the metro draws them: a district is its line, a road its two ends, a constraint what it constrains
+    function metroStationRefs(refs) {
+      const st = new Set(METRO.stations.map(s => s.ref));
+      const out = new Set();
+      const add = ref => {
+        if (st.has(ref)) { out.add(ref); return; }
+        const e = refEntity(ref);
+        if (!e) return;
+        if (e.kind === 'district') METRO.stations.filter(s => s.line === ref).forEach(s => out.add(s.ref));
+        else if (e.kind === 'conduit') [e.item.from, e.item.to].forEach(r => st.has(r) && out.add(r));
+        else if (e.kind === 'bottleneck') asList(e.item.constrains).forEach(r => r !== ref && add(r));
+      };
+      refs.forEach(add);
+      return [...out];
+    }
+
+    function setFocus(refs) {
+      if (!refs.length && tourIndex < 0) {
+        document.body.classList.remove('spotlight');
+        restoreTourPaint();
+        document.querySelectorAll('.maplibregl-marker.tour-focus').forEach(el => el.classList.remove('tour-focus'));
+        if (currentView === 'metro') highlightMetro([]);
+        return;
+      }
+      if (tourIndex < 0) document.body.classList.add('spotlight');
+      saveTourPaint();
+      applyFocus(refs);
+      if (currentView === 'metro') highlightMetro(metroStationRefs(refs));
+    }
+
+    function showRefs(refs) {
+      refs = refs.filter(r => refEntity(r));
+      if (!refs.length) return;
+      actionFocus = refs;
+      setFocus(refs);
+      if (currentView === 'metro') { focusMetro(metroStationRefs(refs)); return; }
+      stopOrbit();
+      const pts = [];
+      refs.forEach(r => {
+        const e = refEntity(r);
+        if (e.kind === 'district') pts.push(...e.item.bounds);
+        else if (refLocation(r)) pts.push(refLocation(r));
+      });
+      if (!pts.length) return;
+      const padding = tourIndex >= 0 ? { top: 70, bottom: 250, left: 80, right: 80 } : { top: 80, bottom: 80, left: 360, right: 80 };
+      const bounds = pts.reduce((b, p) => b.extend(p), new maplibregl.LngLatBounds(pts[0], pts[0]));
+      const cam = map.cameraForBounds(bounds, { padding, maxZoom: 15.8 }) || { center: pts[0], zoom: 15.4 };
+      // cameraForBounds frames a flat map; tilted, the far side recedes, so back off a little.
+      // A single building keeps its neighbours in view.
+      map.flyTo({ center: cam.center, zoom: Math.min(cam.zoom - 0.4, 15.4), pitch: map.getPitch(), bearing: map.getBearing(),
+        padding, duration: 1400, essential: true });
+    }
+
+    function redrawPlaza(pid) {
+      const pz = PLAZAS.find(p => p.id === pid);
+      const src = map.getSource(`plaza-tex-${pid}`);
+      if (pz && src) src.updateImage({ url: drawPlaza(pz).toDataURL('image/png'), coordinates: pz.corners });
+    }
+
+    function clearPlazaCells() {
+      Object.keys(plazaCellMark).forEach(pid => { delete plazaCellMark[pid]; redrawPlaza(pid); });
+    }
+
+    function markPlazaCell(arg) {
+      if (!arg) { clearPlazaCells(); return; }
+      const pz = PLAZAS.find(p => p.id === arg.plaza);
+      if (!pz) return;
+      const index = (v, labels) => (typeof v === 'number' ? v : labels.indexOf(v));
+      const row = index(arg.row, pz.rows), col = index(arg.col, pz.cols);
+      if (!(row >= 0 && row < pz.rows.length && col >= 0 && col < pz.cols.length)) return;
+      clearPlazaCells();
+      plazaCellMark[pz.id] = { row, col };
+      redrawPlaza(pz.id);
+      // a dimmed plaza would hide the ring: bring it into the focus
+      const focus = currentFocus();
+      if ((tourIndex >= 0 || actionFocus) && !focus.includes(pz.id)) { actionFocus = [...focus, pz.id]; setFocus(actionFocus); }
+    }
+
+    const ACTIONS = {
+      show: v => showRefs(asList(v)),
+      open: v => { if (refEntity(v)) gotoRef(v); },
+      tour: v => { const n = +v; if (!n) endTour(); else if (tourIndex < 0) startTour(n - 1); else goToStop(n - 1); },
+      view: v => setView(v),
+      highlight: v => { const refs = asList(v).filter(r => refEntity(r)); actionFocus = refs.length ? refs : null; setFocus(currentFocus()); },
+      plaza_cell: v => markPlazaCell(v),
+      ask: v => (v === 'start' ? startTalk() : pulseAsk()),
+    };
+
+    function act(action) {
+      Object.entries(action || {}).forEach(([name, arg]) => {
+        if (ACTIONS[name]) ACTIONS[name](arg);
+        else console.warn(`metropolis: unknown action ${name}`);
+      });
+    }
+    window.metropolis = { act, actions: Object.keys(ACTIONS) };
+
+    // ===== Narrated tour: each stop's dialogue as voiced audio (deckcast), subtitles, and the
+    // line's actions fired when the line starts. A stop may end with a quiz: the map asks, the
+    // reader answers by clicking an object, a voiced line says right or wrong, the tour moves on.
+    // window.NARRATION comes from the compiler; pages are keyed like deckcast's: stop n -> n,
+    // quiz k of stop n -> 100n + 10k + (1 ask, 2 right, 3 wrong).
+    const NARRATION = window.NARRATION || null;
+    const SPEAKER_COLORS = ['#7cffb2', '#ffcf66', '#00f0ff', '#ff7ad9'];
+    const narrAudio = new Audio();
+    narrAudio.preload = 'auto';
+    let narrating = false;   // the narrated mode is on (survives stop changes)
+    let clip = null;         // what the audio plays now: { key, lines, onEnd }
+    let narrCue = -1;        // index of the line being spoken within the clip
+    let narrNext = null;     // timer to the next stop
+    let quiz = null;         // { i, q } while the map waits for the reader's click
+
+    const narrPage = key => (NARRATION && NARRATION.base ? NARRATION.pages[String(key)] : null);
+    const hasNarration = () => TOUR.some((_, i) => narrPage(i + 1));
+    const quizKey = (i, k, part) => 100 * (i + 1) + 10 * (k + 1) + part;
+
+    function speakerOf(id) {
+      const k = NARRATION.speakers.findIndex(sp => sp.id === id);
+      return { ...(NARRATION.speakers[k] || { name: id }), color: SPEAKER_COLORS[Math.max(0, k) % SPEAKER_COLORS.length] };
+    }
+
+    function showSubtitle(line) {
+      const who = document.getElementById('tourSubWho');
+      if (!line) { who.textContent = ''; document.getElementById('tourSubText').textContent = ''; return; }
+      const sp = speakerOf(line.speaker);
+      who.textContent = sp.name;
+      who.style.color = sp.color;
+      document.getElementById('tourSubText').textContent = line.text.replace(/\[[^\]]*\]\s*/g, '');
+    }
+
+    function setListenUI() {
+      const btn = document.getElementById('tourListenBtn');
+      btn.classList.toggle('active', narrating && !narrAudio.paused);
+      btn.textContent = !narrating ? '🔊 Listen' : quiz && narrAudio.ended ? '↻ Ask again' : narrAudio.paused ? '▶ Resume' : '⏸ Pause';
+      btn.style.display = hasNarration() ? '' : 'none';
+      document.body.classList.toggle('narrating', narrating && !!narrPage(tourIndex + 1));
+      document.body.classList.toggle('quizzing', !!quiz);
+    }
+
+    function narrTick() { narrTickOnce(); if (narrating && !narrAudio.paused) requestAnimationFrame(narrTick); }
+
+    function narrTickOnce() {
+      const page = clip && narrPage(clip.key);
+      if (!narrating || !page) return;
+      const t = narrAudio.currentTime;
+      let idx = -1;
+      page.cues.forEach((c, j) => { if (c.start <= t + 0.05) idx = j; });
+      if (idx > narrCue) {
+        // fire every line passed since the last tick (a seek or a slow frame can skip one)
+        for (let j = narrCue + 1; j <= idx; j++) (clip.lines[j] && clip.lines[j].do || []).forEach(act);
+        narrCue = idx;
+        showSubtitle(clip.lines[idx]);
+      }
+    }
+
+    function playClip(key, lines, onEnd) {
+      clearTimeout(narrNext);
+      narrAudio.pause();
+      narrCue = -1;
+      clip = { key, lines, onEnd };
+      narrAudio.src = NARRATION.base + narrPage(key).file;
+      narrAudio.currentTime = 0;
+      showSubtitle(lines[0]);
+      narrAudio.play().then(() => { setListenUI(); narrTick(); }).catch(err => {
+        setListenUI();
+        // browsers refuse sound before the first click: ask for one (deep link #listen)
+        if (err && err.name === 'NotAllowedError') document.getElementById('listenGate').classList.add('open');
+      });
+      setListenUI();
+    }
+
+    function playStopNarration() {
+      quiz = null;
+      clearTimeout(narrNext);
+      if (!narrating || !narrPage(tourIndex + 1)) { clip = null; narrAudio.pause(); showSubtitle(null); setListenUI(); return; }
+      const i = tourIndex;
+      playClip(i + 1, TOUR[i].dialogue || [], () => afterStop(i));
+    }
+
+    function afterStop(i) {
+      const q = (TOUR[i].quiz || [])[0];
+      if (q && narrPage(quizKey(i, 0, 1))) {
+        quiz = { i, q };   // a click during the question already counts
+        playClip(quizKey(i, 0, 1), [q.ask], setListenUI);
+      } else nextStop();
+    }
+
+    function nextStop() {
+      narrNext = setTimeout(() => {
+        if (narrating && tourIndex >= 0 && tourIndex < TOUR.length - 1) goToStop(tourIndex + 1);
+        else { narrating = false; setListenUI(); }
+      }, 1400);
+    }
+
+    // called by selectObject: while a quiz waits, a click on the map is an answer, not a card
+    function answerQuiz(ref) {
+      if (!quiz || !narrating) return false;
+      const { i, q } = quiz;
+      quiz = null;
+      const right = (q.answer || []).includes(ref);
+      playClip(quizKey(i, 0, right ? 2 : 3), [right ? q.right : q.wrong], nextStop);
+      return true;
+    }
+
+    function stopNarration() {
+      narrating = false;
+      document.getElementById('listenGate').classList.remove('open');
+      quiz = null;
+      clip = null;
+      clearTimeout(narrNext);
+      narrAudio.pause();
+      showSubtitle(null);
+      setListenUI();
+    }
+
+    function toggleListen() {
+      if (!narrating) { narrating = true; if (tourIndex < 0) startTour(0); else playStopNarration(); return; }
+      if (narrAudio.paused) narrAudio.play().then(() => { setListenUI(); narrTick(); }).catch(() => {});
+      else narrAudio.pause();
+      setListenUI();
+    }
+
+    narrAudio.addEventListener('pause', setListenUI);
+    // timeupdate keeps lines moving when frames are throttled (background tab, slow GPU)
+    narrAudio.addEventListener('timeupdate', narrTickOnce);
+    narrAudio.addEventListener('ended', () => {
+      narrTickOnce();
+      setListenUI();
+      if (narrating && clip && clip.onEnd) clip.onEnd();
+    });
+
+    function setupNarration() {
+      if (!hasNarration()) return;
+      const listen = document.getElementById('listenBtn');
+      listen.style.display = '';
+      listen.addEventListener('click', () => { if (tourIndex >= 0 && narrating) endTour(); else toggleListen(); });
+      document.getElementById('tourListenBtn').addEventListener('click', toggleListen);
+      window.addEventListener('keydown', e => {
+        if (tourIndex < 0 || (e.target && /input|select|textarea/i.test(e.target.tagName))) return;
+        if (e.key === 'p' || e.key === 'P') { e.preventDefault(); toggleListen(); }
+      });
+      document.getElementById('listenGateBtn').addEventListener('click', () => {
+        document.getElementById('listenGate').classList.remove('open');
+        narrAudio.play().then(() => { setListenUI(); narrTick(); }).catch(() => {});
+      });
+      // deep link: #listen starts the narrated tour (at #tour=N if given), e.g. …/#tour=1&listen
+      if (/(^#|&)listen\b/.test(location.hash)) {
+        const m = /tour=(\d+)/.exec(location.hash);
+        setTimeout(() => { narrating = true; if (tourIndex < 0) startTour(m ? +m[1] - 1 : 0); else playStopNarration(); }, 1500);
+      }
+      setListenUI();
+    }
+
+    // ===== Talk to the city (level 3): an ElevenLabs voice agent (made by cli.voice_agent) that
+    // knows the map from its knowledge-base export and points at it through the same actions.
+    // The SDK loads only when the reader presses Ask; the agent id is public, the key never is.
+    const ELEVEN_SDK = 'https://cdn.jsdelivr.net/npm/@elevenlabs/client@1.32.1/+esm';
+    let talk = null;   // the live conversation
+
+    function talkUI(mode, status) {
+      const panel = document.getElementById('talkPanel');
+      panel.dataset.mode = mode;
+      document.getElementById('talkStatus').textContent = status;
+    }
+
+    // the model sometimes drops the leading @ of an id, or sends one id instead of a list
+    const refsOf = v => asList(v).map(r => String(r).trim()).map(r => (r.startsWith('@') ? r : '@' + r));
+
+    async function startTalk() {
+      if (talk) return;
+      if (narrating && !narrAudio.paused) narrAudio.pause();   // one voice at a time
+      document.body.classList.add('talking');
+      document.getElementById('talkBtn').classList.add('active');
+      document.getElementById('talkYou').textContent = '';
+      document.getElementById('talkLine').textContent = '';
+      talkUI('connecting', 'CONNECTING…');
+      const tool = (name, fn) => params => {
+        console.info('metropolis: agent calls', name, JSON.stringify(params));
+        try { fn(params || {}); } catch (e) { console.warn(e); }
+        return `${name}: done`;
+      };
+      try {
+        const { Conversation } = await import(ELEVEN_SDK);
+        talk = await Conversation.startSession({
+          agentId: NARRATION.agent_id,
+          clientTools: {
+            show: tool('show', p => act({ show: refsOf(p.refs || p.ref) })),
+            highlight: tool('highlight', p => act({ highlight: refsOf(p.refs) })),
+            open: tool('open', p => act({ open: refsOf(p.ref)[0] })),
+            view: tool('view', p => act({ view: p.mode })),
+            tour: tool('tour', p => act({ tour: +p.stop || 0 })),
+          },
+          // only a live conversation ends the panel; a failed start keeps it open with the reason
+          onStatusChange: ({ status }) => { if (status === 'disconnected' && talk) endTalk(); },
+          onModeChange: ({ mode }) => talkUI(mode, mode === 'speaking' ? 'SPEAKING' : 'LISTENING — ASK ANYTHING'),
+          onMessage: ({ source, message }) => {
+            const text = String(message).replace(/\[[^\]]*\]\s*/g, '');   // the voice's [emotion] tags
+            document.getElementById(source === 'user' ? 'talkYou' : 'talkLine').textContent = source === 'user' ? `“${text}”` : text;
+          },
+          onError: msg => { console.warn('talk:', msg); talkUI('error', 'CONNECTION PROBLEM'); },
+        });
+        talkUI('listening', 'LISTENING — ASK ANYTHING');
+      } catch (e) {
+        console.warn('talk:', e);
+        talk = null;
+        // the usual causes: no microphone permission, a page served over plain http, or no network
+        talkUI('error', window.isSecureContext ? 'NO MICROPHONE OR NO NETWORK' : 'NEEDS HTTPS OR LOCALHOST');
+      }
+    }
+
+    function endTalk() {
+      const t = talk;
+      talk = null;
+      if (t) t.endSession().catch(() => {});
+      document.body.classList.remove('talking');
+      document.getElementById('talkBtn').classList.remove('active');
+    }
+
+    // a typed question to the live agent (the same conversation as the microphone)
+    window.metropolis.ask = text => (talk ? talk.sendUserMessage(String(text)) : null);
+
+    // point at the Ask button for a few seconds (a narrated line says "press Ask")
+    function pulseAsk() {
+      const btn = document.getElementById('talkBtn');
+      if (!btn || btn.style.display === 'none') return;
+      btn.classList.remove('pulse');
+      void btn.offsetWidth;   // restart the animation
+      btn.classList.add('pulse');
+      setTimeout(() => btn.classList.remove('pulse'), 12000);
+    }
+
+    function setupTalk() {
+      if (!NARRATION || !NARRATION.agent_id) return;
+      const btn = document.getElementById('talkBtn');
+      btn.style.display = '';
+      btn.addEventListener('click', () => (document.body.classList.contains('talking') ? endTalk() : startTalk()));
+      document.getElementById('talkEndBtn').addEventListener('click', endTalk);
+      if (/(^#|&)ask\b/.test(location.hash)) {
+        const gate = document.getElementById('listenGate'), gbtn = document.getElementById('listenGateBtn');
+        gbtn.textContent = '🎙 Talk to the city';
+        gbtn.onclick = () => { gate.classList.remove('open'); gbtn.textContent = '🎧 Start the narrated tour'; gbtn.onclick = null; startTalk(); };
+        setTimeout(() => gate.classList.add('open'), 1200);
+      }
     }
 
     function setupTour() {
@@ -1409,6 +1893,386 @@
       if (m) {
         // wait for district names / plaza textures so the first stop is dimmed correctly
         setTimeout(() => startTour(+m[1] - 1), 1200);
+      }
+    }
+
+
+    // ===== Metro view: schematic map from window.METRO (same spec as the city) =====
+    const METRO = window.METRO || { lines: [], stations: [], interchanges: [] };
+    const M_UNIT = 120, M_ROW = 130, M_PAD = 220;
+    let metroView = null;      // { x, y, w, h } viewBox
+    let metroBuilt = false;
+    let currentView = 'city';
+
+    // a station's key: its ref, or ref@line when a ref sits on several routes (metro.routes)
+    const mKey = st => st.key || st.ref;
+    function metroY(row) { const rows = METRO.lines.length; return M_PAD + (rows - 1 - row) * M_ROW; }
+    function metroX(x) { return M_PAD + 260 + x * M_UNIT; }
+    function metroStationLabel(st) {
+      const e = refEntity(st.ref);
+      if (!e) return { name: st.ref, sub: '' };
+      const it = e.item;
+      if (e.kind === 'plaza') return { name: it.title, sub: '▦ table' };
+      if (e.kind === 'challenge') return { name: `${it.codename} · ${it.title}`, sub: it.verdict ? VERDICT[it.verdict].word.toLowerCase() : '' };
+      return { name: it.title, sub: it.metrics && it.metrics.scale ? it.metrics.scale : '' };
+    }
+    function wrapLabel(text, max) {
+      const words = text.split(' '); const out = []; let cur = '';
+      words.forEach(w => { if ((cur + ' ' + w).trim().length > max && cur) { out.push(cur); cur = w; } else cur = (cur + ' ' + w).trim(); });
+      if (cur) out.push(cur);
+      return out.slice(0, 3);
+    }
+
+    // Labels live in screen pixels: each label group is drawn at 1 unit = 1 px and placed with
+    // translate(x, y) scale(k), k = SVG units per screen pixel. On every zoom the labels are
+    // re-placed greedily (most important first) into free spots around their station; a label
+    // that fits nowhere is hidden until the user zooms in (its name stays in the hover tooltip).
+    const M_FONT = 12, M_SUB = 10;
+    let metroLabels = [];      // { g, cx, cy, w, h, r, prio, side }
+    let metroFixed = [];       // { g, ux, uy, w, h, anchor } line names (always shown)
+    let metroLastK = null;
+    let metroFocus = new Set();   // tour / selection focus: their labels are placed first
+
+    // Line geometry: each line runs along its row, but at an interchange its members leave
+    // their rows on 45° diagonals and pass side by side as close parallel tracks, so a
+    // transfer is a short capsule instead of a bar across the map. Lines go back to their row
+    // between interchanges when there is room for the two diagonals.
+    const M_TRACK = 20, M_FLAT = 26;
+    let mGeo = null;   // { paths: {lineId: [[x,y]...]}, st: {ref: {x,y}}, ic: {id: {x,y0,y1}} }
+    function metroGeometry() {
+      const target = {};   // ref -> y at its interchange
+      const ic = {};
+      METRO.interchanges.forEach(c => {
+        const members = c.members.slice().sort((a, b) => {
+          const ra = METRO.stations.find(s => mKey(s) === a).row, rb = METRO.stations.find(s => mKey(s) === b).row;
+          return rb - ra;   // higher row = higher on screen = smaller y
+        });
+        const ys = members.map(m => metroY(METRO.stations.find(s => mKey(s) === m).row));
+        const yc = ys.reduce((a, b) => a + b, 0) / ys.length;
+        members.forEach((m, i) => { target[m] = yc + (i - (members.length - 1) / 2) * M_TRACK; });
+        const tys = members.map(m => target[m]);
+        ic[c.id] = { x: metroX(c.x), y0: Math.min(...tys), y1: Math.max(...tys) };
+      });
+      const paths = {}, st = {};
+      METRO.lines.forEach(ln => {
+        const h = metroY(ln.row);
+        const stations = METRO.stations.filter(s => s.line === ln.id).sort((a, b) => a.x - b.x);
+        const knots = stations.filter(s => mKey(s) in target).map(s => [metroX(s.x), target[mKey(s)]]);
+        // a line whose first station is an interchange starts right there, at the track height
+        const firstIsKnot = stations.length && mKey(stations[0]) in target;
+        const start = metroX(ln.x0) - 40;
+        const y0 = firstIsKnot ? target[mKey(stations[0])] : h;
+        const pts = [[start, y0]];
+        let [cx, cy] = [start, y0];
+        const push = (x, y) => { if (x > cx + 0.01 || pts.length === 0) { pts.push([x, y]); cx = x; cy = y; } else { pts[pts.length - 1] = [Math.max(x, cx), y]; cy = y; } };
+        knots.forEach(([kx, ky]) => {
+          const via = Math.abs(cy - h) + Math.abs(ky - h);
+          if (cy !== h && kx - M_FLAT - cx >= via + 20) {
+            push(cx + Math.abs(cy - h), h);                     // back to the row
+          }
+          const d = Math.abs(ky - cy);
+          if (kx - M_FLAT - d > cx) push(kx - M_FLAT - d, cy);  // run level, then diagonal
+          push(kx - M_FLAT, ky);
+          push(kx + M_FLAT, ky);
+        });
+        const end = Math.max(metroX(ln.x1) + 40, cx + Math.abs(cy - h) + 40);
+        if (cy !== h) push(cx + Math.abs(cy - h), h);
+        push(end, h);
+        paths[ln.id] = pts;
+        ln._startY = y0;
+        const yAt = x => {
+          for (let i = 1; i < pts.length; i++) {
+            const [x0, y0] = pts[i - 1], [x1, y1] = pts[i];
+            if (x <= x1) return x1 === x0 ? y1 : y0 + (y1 - y0) * (x - x0) / (x1 - x0);
+          }
+          return pts[pts.length - 1][1];
+        };
+        stations.forEach(s => { const x = metroX(s.x); st[mKey(s)] = { x, y: mKey(s) in target ? target[mKey(s)] : yAt(x) }; });
+      });
+      return { paths, st, ic };
+    }
+
+    function buildMetro() {
+      const svg = document.getElementById('metroSvg');
+      const NS = 'http://www.w3.org/2000/svg';
+      const el = (tag, attrs, parent) => { const n = document.createElementNS(NS, tag); Object.entries(attrs || {}).forEach(([k, v]) => n.setAttribute(k, v)); (parent || svg).appendChild(n); return n; };
+      svg.innerHTML = '';
+      metroLabels = []; metroFixed = []; metroLastK = null;
+      const maxX = Math.max(1, ...METRO.stations.map(s => s.x));
+      const W = metroX(maxX) + M_PAD + 120, H = metroY(-1) + M_PAD / 2;
+      const gLines = el('g'), gIc = el('g'), gSt = el('g'), gLab = el('g');
+      mGeo = metroGeometry();
+      const textBlock = (parent, rows, sub, anchor, bold) => {
+        rows.forEach((txt, k) => {
+          const t = el('text', { x: 0, y: k * (M_FONT + 3), 'text-anchor': anchor, class: bold ? 'metro-line-name' : 'metro-label' }, parent);
+          t.textContent = txt;
+        });
+        if (sub) {
+          const t = el('text', { x: 0, y: rows.length * (M_FONT + 3) - 1, 'text-anchor': anchor, class: 'metro-sub' }, parent);
+          t.textContent = sub;
+        }
+      };
+      // lines and their names
+      METRO.lines.forEach(ln => {
+        const y = metroY(ln.row);
+        const g = el('g', { class: 'metro-line', 'data-line': ln.id }, gLines);
+        el('polyline', { points: mGeo.paths[ln.id].map(p => p.join(',')).join(' '), fill: 'none', stroke: ln.color, 'stroke-width': 12, 'stroke-linecap': 'round', 'stroke-linejoin': 'round' }, g);
+
+      });
+      // interchanges: a white capsule joining the member stations, label above its top
+      METRO.interchanges.forEach((ic, icIdx) => {
+        const { x, y0, y1 } = mGeo.ic[ic.id];
+        const openIc = ev => { ev.stopPropagation(); if (!metroDragMoved) (ic.ref ? gotoRef(ic.ref) : selectObject('interchange', ic.id, icIdx)); };
+        const cap = el('rect', { class: 'metro-ic', 'data-ic': ic.id, x: x - 17, y: y0 - 17, width: 34, height: y1 - y0 + 34, rx: 17, fill: '#ffffff', stroke: '#0a0f1c', 'stroke-width': 4 }, gIc);
+        el('title', {}, cap).textContent = `⇄ ${ic.label || ''}${ic.title ? ' — ' + ic.title : ''}`;
+        cap.addEventListener('click', openIc);
+        const lg = el('g', { class: 'metro-ic-g', 'data-ic': ic.id }, gLab);
+        lg.addEventListener('click', openIc);
+        const t = el('text', { x: 0, y: 0, 'text-anchor': 'middle', class: 'metro-ic-label' }, lg);
+        t.textContent = ic.ref ? (ic.label || '') : `⇄ ${ic.label || ''}`;
+        if (ic.ref) lg.dataset.ref = ic.ref, cap.dataset.ref = ic.ref;
+        metroLabels.push({ g: lg, cx: x, cy: y0, cy1: y1, r: 18, prio: 100, ic: true, ref: ic.ref });
+      });
+      // stations
+      const byLine = {};
+      METRO.stations.forEach(st => (byLine[st.line] = byLine[st.line] || []).push(st));
+      Object.values(byLine).forEach(list => list.sort((a, b) => a.x - b.x).forEach((st, i) => {
+        const ln = METRO.lines.find(l => l.id === st.line);
+        const { x, y } = mGeo.st[mKey(st)];
+        const e = refEntity(st.ref);
+        const sharedIc = st.interchange && (METRO.interchanges.find(c => c.id === st.interchange) || {}).ref;
+        const g = el('g', { class: 'metro-station', 'data-ref': st.ref }, gSt);
+        const lab = metroStationLabel(st);
+        el('title', {}, g).textContent = lab.name + (lab.sub ? ` — ${lab.sub}` : '');
+        let r = 11;
+        if (st.kind === 'plaza') {
+          el('rect', { class: 'm-dot', x: x - 12, y: y - 12, width: 24, height: 24, rx: 5, fill: '#0a0f1c', stroke: ln.color, 'stroke-width': 4 }, g);
+          el('path', { d: `M${x - 6} ${y}h12M${x} ${y - 6}v12`, stroke: ln.color, 'stroke-width': 2 }, g);
+          r = 13;
+        } else if (st.kind === 'challenge') {
+          const c = e && e.item.verdict ? VERDICT[e.item.verdict].color : '#ffe9a8';
+          el('circle', { class: 'm-dot', cx: x, cy: y, r: 13, fill: c, stroke: '#0a0f1c', 'stroke-width': 4 }, g);
+          r = 15;
+        } else {
+          el('circle', { class: 'm-dot', cx: x, cy: y, r: st.interchange ? 9 : 11, fill: '#ffffff', stroke: st.interchange ? '#0a0f1c' : ln.color, 'stroke-width': st.interchange ? 3 : 5 }, g);
+          r = st.interchange ? 18 : 13;
+        }
+        g.addEventListener('click', ev => { ev.stopPropagation(); if (!metroDragMoved) gotoRef(st.ref); });
+        if (sharedIc) return;   // a station shared by several routes is labelled once, on its interchange
+        const lg = el('g', { class: 'metro-station-label', 'data-ref': st.ref }, gLab);
+        const icon = e && e.kind === 'spire' && HAS_KINDS ? kindOf(e.item).icon + ' ' : '';
+        const rows = wrapLabel(lab.name, 22);
+        rows[0] = icon + rows[0];
+        const sub = lab.sub ? (lab.sub.length > 32 ? lab.sub.slice(0, 31) + '…' : lab.sub) : '';
+        textBlock(lg, rows, sub, 'start', false);
+        lg.addEventListener('click', ev => { ev.stopPropagation(); if (!metroDragMoved) gotoRef(st.ref); });
+        const prio = st.kind === 'challenge' ? 90 : st.kind === 'plaza' ? 80 : st.interchange ? 70 : 50;
+        metroLabels.push({ g: lg, cx: x, cy: y, r, prio, side: !!st.interchange, order: i, ref: st.ref });
+      }));
+      // line key (instead of names on the map, which pile up where lines share a terminus)
+      const legend = document.getElementById('metroLegend');
+      const district = id => (window.DISTRICTS || []).find(d => d.id === id) || {};
+      legend.innerHTML = METRO.lines.slice().sort((a, b) => a.row - b.row).map(ln => `
+        <div class="metro-legend-item" data-line="${ln.id}"><span class="metro-legend-bar" style="background: ${ln.color};"></span>
+          <span>${ln.name}<span class="metro-legend-sub">${district(ln.id).scale_label || ln.sub || ''}</span></span></div>`).join('') +
+        (METRO.interchanges.length && !METRO.interchanges.some(c => c.ref) ? `<div class="metro-legend-item metro-legend-ic"><span class="metro-legend-bar" style="background: #fff; height: 14px; width: 14px; border-radius: 7px; border: 3px solid #0a0f1c; box-sizing: border-box;"></span><span>Interchange — click for why<span class="metro-legend-sub">${METRO.interchanges.length} transfers between lines</span></span></div>` : '');
+      legend.querySelectorAll('[data-line]').forEach(item => item.addEventListener('click', ev => {
+        ev.stopPropagation();
+        focusMetro(METRO.stations.filter(s => s.line === item.dataset.line).map(s => s.ref));
+      }));
+      legend.addEventListener('mousedown', ev => ev.stopPropagation());
+      legend.addEventListener('wheel', ev => ev.stopPropagation());
+
+      // measure every label once, at 1 unit = 1 px
+      metroLabels.concat(metroFixed).forEach(L => {
+        L.g.setAttribute('transform', 'translate(0,0)');
+        const b = L.g.getBBox();
+        L.bx = b.x; L.by = b.y; L.w = b.width; L.h = b.height;
+      });
+      svg.dataset.w = W; svg.dataset.h = H;
+      metroView = { x: 0, y: 0, w: W, h: H };
+      metroBuilt = true;
+      fitMetro();
+    }
+
+    function layoutMetroLabels() {
+      const svg = document.getElementById('metroSvg');
+      const box = svg.getBoundingClientRect();
+      if (!box.width || !metroLabels.length) return;
+      const k = metroView.w / box.width;               // SVG units per screen pixel
+      if (metroLastK !== null && Math.abs(k - metroLastK) / metroLastK < 0.01) return;
+      metroLastK = k;
+      const placed = [];
+      const hit = (a) => placed.some(b => a.x < b.x + b.w && b.x < a.x + a.w && a.y < b.y + b.h && b.y < a.y + a.h);
+      const PADX = 3, PADY = 2;
+      // obstacles in screen px (relative to an arbitrary origin: unit / k)
+      METRO.stations.forEach(st => {
+        const p = mGeo.st[mKey(st)], x = p.x / k, y = p.y / k, r = 9;
+        placed.push({ x: x - r, y: y - r, w: 2 * r, h: 2 * r });
+      });
+      // the line strokes: level runs as one box, diagonals sampled as small boxes
+      const half = 6 / k + 2;
+      Object.values(mGeo.paths).forEach(pts => {
+        for (let i = 1; i < pts.length; i++) {
+          const [x0, y0] = pts[i - 1].map(v => v / k), [x1, y1] = pts[i].map(v => v / k);
+          if (Math.abs(y1 - y0) < 0.5) { placed.push({ x: x0, y: y0 - half, w: x1 - x0, h: 2 * half }); continue; }
+          const n = Math.max(1, Math.ceil(Math.hypot(x1 - x0, y1 - y0) / 6));
+          for (let j = 0; j <= n; j++) {
+            const x = x0 + (x1 - x0) * j / n, y = y0 + (y1 - y0) * j / n;
+            placed.push({ x: x - half, y: y - half, w: 2 * half, h: 2 * half });
+          }
+        }
+      });
+      METRO.interchanges.forEach(ic => {
+        const g = mGeo.ic[ic.id], x = g.x / k, y0 = g.y0 / k, y1 = g.y1 / k;
+        placed.push({ x: x - 17 / k - 2, y: y0 - 17 / k, w: 34 / k + 4, h: y1 - y0 + 34 / k });
+      });
+      metroFixed.forEach(L => {
+        const sx = L.ux / k - L.w, sy = L.uy / k - L.h / 2 + 4;
+        L.g.setAttribute('transform', `translate(${L.ux},${L.uy - (L.h / 2 - 8) * k}) scale(${k})`);
+        placed.push({ x: sx - PADX, y: sy - PADY, w: L.w + 2 * PADX, h: L.h + 2 * PADY });
+      });
+      // labels of shared stations (route hubs) may cross line strokes, never another label
+      const nObstacles = placed.length;
+      const hitLabel = (a) => placed.slice(nObstacles).some(b => a.x < b.x + b.w && b.x < a.x + a.w && a.y < b.y + b.h && b.y < a.y + a.h);
+      const boost = L => (L.ref && metroFocus.has(L.ref) ? 1000 : 0);
+      const items = metroLabels.slice().sort((a, b) => (b.prio + boost(b)) - (a.prio + boost(a)) || (a.order || 0) - (b.order || 0));
+      items.forEach(L => {
+        const cx = L.cx / k, cy = L.cy / k, gap = 6 + L.r / k;
+        // candidate top-left corners of the label box, in px, relative to the station
+        const above = [-L.w / 2, -gap - L.h], below = [-L.w / 2, gap];
+        const right = [gap, -L.h / 2], left = [-gap - L.w, -L.h / 2];
+        const ar = [gap * 0.6, -gap - L.h], br = [gap * 0.6, gap], al = [-gap * 0.6 - L.w, -gap - L.h], bl = [-gap * 0.6 - L.w, gap];
+        // an interchange: above its capsule first, then beside its middle, then below it
+        const capH = L.cy1 !== undefined ? (L.cy1 - L.cy) / k : 0;
+        const cands = L.ic ? [[-L.w / 2, -gap - L.h - 2], [-L.w / 2, -gap - L.h - 18], [gap, -gap - L.h], [-gap - L.w, -gap - L.h],
+          [gap + 4, capH / 2 - L.h / 2], [-gap - 4 - L.w, capH / 2 - L.h / 2], [-L.w / 2, capH + gap + 2], [gap, capH + gap]]
+          : L.side ? [right, left, ar, br, al, bl, above, below]
+          : (L.order % 2 === 0 ? [above, below, ar, br, al, bl, right, left] : [below, above, br, ar, bl, al, right, left]);
+        for (const [dx, dy] of cands) {
+          const r = { x: cx + dx - PADX, y: cy + dy - PADY, w: L.w + 2 * PADX, h: L.h + 2 * PADY };
+          if (!(L.ic && L.ref ? hitLabel(r) : hit(r))) {
+            placed.push(r);
+            // label content starts at its own bbox origin (bx, by); shift so the box lands at (dx, dy)
+            const ux = (cx + dx - L.bx) * k, uy = (cy + dy - L.by) * k;
+            L.g.setAttribute('transform', `translate(${ux},${uy}) scale(${k})`);
+            L.g.style.display = '';
+            return;
+          }
+        }
+        L.g.style.display = 'none';
+      });
+    }
+
+    // Smooth camera moves on the metro map (tour stops, refit): interpolate the viewBox with an
+    // ease-in-out curve; the width is interpolated geometrically so zooming feels even.
+    let metroAnim = null;
+    function animateMetroTo(target, ms) {
+      if (metroAnim) cancelAnimationFrame(metroAnim.raf);
+      const from = { ...metroView }, t0 = performance.now(), dur = ms || 1200;
+      const ease = t => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
+      // keep the point under the view centre moving in step with the zoom
+      const fc = { x: from.x + from.w / 2, y: from.y + from.h / 2 }, tc = { x: target.x + target.w / 2, y: target.y + target.h / 2 };
+      const step = now => {
+        const u = Math.min(1, (now - t0) / dur), e = ease(u);
+        const w = from.w * Math.pow(target.w / from.w, e), h = from.h * Math.pow(target.h / from.h, e);
+        const cx = fc.x + (tc.x - fc.x) * e, cy = fc.y + (tc.y - fc.y) * e;
+        metroView = { x: cx - w / 2, y: cy - h / 2, w, h };
+        applyMetroView();
+        if (u < 1) metroAnim.raf = requestAnimationFrame(step); else metroAnim = null;
+      };
+      metroAnim = { raf: requestAnimationFrame(step) };
+    }
+    function stopMetroAnim() { if (metroAnim) { cancelAnimationFrame(metroAnim.raf); metroAnim = null; } }
+
+    function applyMetroView() {
+      const v = metroView;
+      document.getElementById('metroSvg').setAttribute('viewBox', `${v.x} ${v.y} ${v.w} ${v.h}`);
+      layoutMetroLabels();
+    }
+    function fitMetro(animate) {
+      const svg = document.getElementById('metroSvg');
+      const W = +svg.dataset.w, H = +svg.dataset.h;
+      const box = svg.getBoundingClientRect();
+      const aspect = (box.width || 1600) / (box.height || 1000);
+      // leave room for the directory on the left and the HUD at top/bottom
+      let w = W * 1.08, h = w / aspect;
+      if (h < H * 1.25) { h = H * 1.25; w = h * aspect; }
+      const target = { x: (W - w) / 2 - w * 0.08, y: (H - h) / 2 - h * 0.02, w, h };
+      if (animate) animateMetroTo(target, 1200); else { stopMetroAnim(); metroView = target; applyMetroView(); }
+    }
+    function focusMetro(refs) {
+      const pts = METRO.stations.filter(s => refs.includes(s.ref));
+      if (!pts.length) return;
+      const xs = pts.map(s => mGeo.st[mKey(s)].x), ys = pts.map(s => mGeo.st[mKey(s)].y);
+      const svg = document.getElementById('metroSvg');
+      const box = svg.getBoundingClientRect();
+      const aspect = (box.width || 1600) / (box.height || 1000);
+      let w = Math.max(1500, (Math.max(...xs) - Math.min(...xs)) * 1.5 + 700);
+      let h = w / aspect;
+      const needH = (Math.max(...ys) - Math.min(...ys)) * 1.6 + 500;
+      if (h < needH) { h = needH; w = h * aspect; }
+      const cx = (Math.max(...xs) + Math.min(...xs)) / 2, cy = (Math.max(...ys) + Math.min(...ys)) / 2;
+      // the tour card covers the lower third: shift the view down so stations sit higher
+      animateMetroTo({ x: cx - w / 2 - w * 0.06, y: cy - h / 2 + h * 0.14, w, h }, 1400);
+    }
+    function highlightMetro(refs, selected) {
+      const set = new Set(refs || []);
+      metroFocus = new Set(set); if (selected) metroFocus.add(selected);
+      metroLastK = null;
+      document.querySelectorAll('.metro-station, .metro-station-label').forEach(g => {
+        g.classList.toggle('m-focus', set.has(g.dataset.ref));
+        g.classList.toggle('m-selected', g.dataset.ref === selected);
+      });
+      const lines = new Set(METRO.stations.filter(s => set.has(s.ref)).map(s => s.line));
+      document.querySelectorAll('.metro-line').forEach(g => g.classList.toggle('m-focus', lines.has(g.dataset.line)));
+      if (metroBuilt) layoutMetroLabels();
+    }
+
+    let metroDragMoved = false;
+    function setupMetro() {
+      const view = document.getElementById('metroView');
+      const svg = document.getElementById('metroSvg');
+      let drag = null;
+      view.addEventListener('mousedown', e => { stopMetroAnim(); drag = { x: e.clientX, y: e.clientY, v: { ...metroView } }; metroDragMoved = false; view.classList.add('dragging'); });
+      window.addEventListener('mousemove', e => {
+        if (!drag) return;
+        const box = svg.getBoundingClientRect(), k = metroView.w / box.width;
+        const dx = e.clientX - drag.x, dy = e.clientY - drag.y;
+        if (Math.abs(dx) + Math.abs(dy) > 4) metroDragMoved = true;
+        metroView = { ...drag.v, x: drag.v.x - dx * k, y: drag.v.y - dy * k };
+        applyMetroView();
+      });
+      window.addEventListener('mouseup', () => { drag = null; view.classList.remove('dragging'); });
+      view.addEventListener('wheel', e => {
+        e.preventDefault();
+        stopMetroAnim();
+        const box = svg.getBoundingClientRect();
+        const f = Math.exp(e.deltaY * 0.0015);
+        const px = metroView.x + (e.clientX - box.left) / box.width * metroView.w;
+        const py = metroView.y + (e.clientY - box.top) / box.height * metroView.h;
+        metroView = { x: px - (px - metroView.x) * f, y: py - (py - metroView.y) * f, w: metroView.w * f, h: metroView.h * f };
+        applyMetroView();
+      }, { passive: false });
+      document.querySelectorAll('#viewSwitch button').forEach(b => b.addEventListener('click', () => setView(b.dataset.view)));
+      window.addEventListener('resize', () => { if (currentView === 'metro' && metroBuilt) { metroLastK = null; applyMetroView(); } });
+      document.getElementById('resetCamBtn').addEventListener('click', () => { if (currentView === 'metro') fitMetro(true); });
+      let initial = 'city';
+      try { initial = localStorage.getItem('metropolis.view') || 'city'; } catch (e) { /* storage blocked */ }
+      if (/view=metro/.test(location.hash)) initial = 'metro';
+      if (/view=city/.test(location.hash)) initial = 'city';
+      if (!METRO.stations.length) document.getElementById('viewSwitch').style.display = 'none';
+      else setView(initial);
+    }
+    function setView(v) {
+      currentView = v === 'metro' && METRO.stations.length ? 'metro' : 'city';
+      document.body.classList.toggle('metro', currentView === 'metro');
+      document.querySelectorAll('#viewSwitch button').forEach(b => b.classList.toggle('active', b.dataset.view === currentView));
+      try { localStorage.setItem('metropolis.view', currentView); } catch (e) { /* storage blocked */ }
+      if (currentView === 'metro') {
+        if (!metroBuilt) buildMetro(); else fitMetro();
+        const f = metroStationRefs(currentFocus());
+        if (f.length) { highlightMetro(f); focusMetro(f); }
       }
     }
 
@@ -1604,6 +2468,20 @@
         fitFont(g, h.label || '', 800, X(10), cs - X(4));
         g.fillText(h.label || '', gx + cs * (h.col + 0.5), gy + cs * (h.row + 1) - X(3));
       });
+      // a cell the narration points at (plaza_cell action)
+      const mark = plazaCellMark[pz.id];
+      if (mark) {
+        const x0 = gx + cs * mark.col, y0 = gy + cs * mark.row;
+        g.save();
+        g.fillStyle = 'rgba(124, 255, 178, 0.14)';
+        g.fillRect(x0, y0, cs, cs);
+        g.strokeStyle = '#7cffb2';
+        g.lineWidth = X(3);
+        g.shadowColor = '#7cffb2';
+        g.shadowBlur = X(10);
+        g.strokeRect(x0 + X(1.5), y0 + X(1.5), cs - X(3), cs - X(3));
+        g.restore();
+      }
       return canvas;
     }
 
@@ -1618,8 +2496,7 @@
     function setPlazaLayer(plazaId, layerId) {
       plazaActive[plazaId] = layerId;
       const pz = PLAZAS.find(p => p.id === plazaId);
-      const src = map.getSource(`plaza-tex-${plazaId}`);
-      if (src) src.updateImage({ url: drawPlaza(pz).toDataURL('image/png'), coordinates: pz.corners });
+      redrawPlaza(plazaId);
       map.setFilter('plaza-bars', plazaBarFilter());
       document.querySelectorAll(`.plaza-switch[data-plaza="${plazaId}"] button`).forEach(b => b.classList.toggle('active', b.dataset.layer === layerId));
       if (activeSelection && activeSelection.type === 'plaza' && activeSelection.id === plazaId) {
@@ -1746,6 +2623,9 @@
         setupRoutePanel();
         setupBuildingSizeControls();
         setupTour();
+        setupNarration();
+        setupTalk();
+        setupMetro();
         applyDefaultView();
         buildLegendUI();
         buildScaleRunway();
@@ -1952,14 +2832,17 @@
         }
       });
 
-      // One-way arrows along every road (flow direction from source to target)
+      // One-way arrows along every road (flow direction from source to target);
+      // city_metadata.road_arrows: 'normal' | 'sparse' (dense maps) | 'none'
+      const roadArrows = (window.CITY_CONFIG || {}).road_arrows || 'normal';
       map.addLayer({
         id: 'conduits-arrows',
         type: 'symbol',
         source: 'conduits-geo',
         layout: {
+          'visibility': roadArrows === 'none' ? 'none' : 'visible',
           'symbol-placement': 'line',
-          'symbol-spacing': 110,
+          'symbol-spacing': roadArrows === 'sparse' ? 420 : 110,
           'icon-image': ['match', ['get', 'status'], 'planned', 'arrow-grey', 'arrow-light'],
           'icon-size': 0.55,
           'icon-allow-overlap': true,
@@ -2170,8 +3053,10 @@
       });
 
       // 4. Clickable road badges (highway / ferry / planned road)
+      // city_metadata.road_badges = false: dense maps (e.g. traceability) keep roads but drop their badges
+      const roadBadges = (window.CITY_CONFIG || {}).road_badges !== false;
       window.CONDUITS.forEach((cond, idx) => {
-        if (!cond.midpoint) return;
+        if (!cond.midpoint || !roadBadges) return;
         const conduitEl = document.createElement('div');
         conduitEl.className = `conduit-beacon-marker status-${cond.status || 'operational'}`;
         conduitEl.dataset.tourRef = cond.id;
@@ -2410,6 +3295,8 @@
 
     // Selection & Drawer Rendering
     function selectObject(type, id, index, keepCamera) {
+      if (answerQuiz(id)) return;
+      if (currentView === 'metro') { keepCamera = true; highlightMetro(metroStationRefs(currentFocus()), id); }
       activeSelection = { type, id, index };
       const selected = type === 'bottleneck' ? BNECKS[index] : null;
       highlightField(selected && selected.scope === 'field' ? id : null);
@@ -2457,7 +3344,10 @@
             <div class="drawer-section-title"><span>✦</span> ${L('abstract_title', 'Scientific Abstract & Methodology')}</div>
             <p class="drawer-body-text">${item.abstract}</p>
           </div>
+          ${cardLinks(item.links)}
           ${relationBlock('⏱️ Constraints at this spire', item.constraints)}
+          ${relationBlock('↘ Linked from', roadEnds(item.id, 'to'))}
+          ${relationBlock('↗ Leads to', roadEnds(item.id, 'from'))}
           ${relationBlock('🎯 Advances priorities', item.advances)}
           <div class="relation-block conduit-endpoints-row">
             <button class="conduit-endpoint-btn" id="routeFromHereBtn"><span>🧭 ROUTE FROM HERE</span><span>➔</span></button>
@@ -2526,6 +3416,7 @@
             <span class="metric-label">${L('target_title', 'Strategic Policy Target')}</span>
             <span class="metric-value" style="font-size: 13.5px; line-height: 1.5; color: #fff;">${item.target}</span>
           </div>
+          ${cardLinks(item.links)}
           ${relationBlock(item.verdict ? '🏛️ Supporting evidence' : '🏛️ Advanced by', item.advanced_by)}
           ${relationBlock(item.verdict ? '⚠️ Counterevidence' : '⚠️ Blocked by', item.blocked_by)}
         `;
@@ -2537,6 +3428,26 @@
 
         updatePager(window.CHALLENGES.length, index);
         flyToObject(item.coordinates);
+      } else if (type === 'interchange') {
+        const ic = METRO.interchanges[index];
+        badge.className = 'drawer-type-badge badge-conduit';
+        badge.textContent = `⇄ INTERCHANGE • ${ic.members.length} LINES`;
+        title.textContent = ic.title || ic.label;
+        subtitle.textContent = ic.label || '';
+        const lineOf = ref => { const st = METRO.stations.find(s => s.ref === ref); return st ? METRO.lines.find(l => l.id === st.line) : null; };
+        body.innerHTML = `
+          ${ic.text ? `<p class="drawer-body-text">${ic.text}</p>` : ''}
+          <div class="relation-block">
+            <div class="drawer-section-title"><span>🚇</span> Change here between</div>
+            ${ic.members.map(ref => { const ln = lineOf(ref); return `<div class="ic-member">
+              <span class="ic-line-dot" style="background: ${ln ? ln.color : '#fff'};"></span>
+              <span style="color: var(--text-muted); min-width: 9em;">${ln ? ln.name.replace(/^\d+ · /, '') : ''}</span>
+              <span class="ref-chip kind-spire" data-ref="${ref}">${refLabel(ref)}</span></div>`; }).join('')}
+          </div>`;
+        showLinks(null, []);
+        updatePager(METRO.interchanges.length, index);
+        document.querySelectorAll('.metro-ic').forEach(r => r.classList.toggle('m-selected', r.dataset.ic === ic.id));
+        highlightMetro(ic.members, null);
       } else if (type === 'plaza') {
         const item = PLAZAS[index];
         const layer = item.layers.find(l => l.id === plazaActive[item.id]) || item.layers[0] || { cells: [] };
@@ -2720,6 +3631,7 @@
       if (type === 'challenge') return window.CHALLENGES;
       if (type === 'conduit') return window.CONDUITS;
       if (type === 'plaza') return PLAZAS;
+      if (type === 'interchange') return METRO.interchanges;
       return [];
     }
 
@@ -2729,6 +3641,8 @@
       activeSelection = null;
       showLinks(null, []);
       highlightField(null);
+      document.querySelectorAll('.metro-ic.m-selected').forEach(r => r.classList.remove('m-selected'));
+      if (currentView === 'metro' && tourIndex < 0) highlightMetro(metroStationRefs(currentFocus()), null);
     }
 
     // Legend Builder (districts & spires, highways, constraints, priorities)
@@ -3080,6 +3994,30 @@
       if (e.kind === 'challenge') return `🎯 ${e.item.codename}`;
       if (e.kind === 'conduit') return `${roadOf(e.item).icon} ${e.item.codename}`;
       return e.item.codename || e.item.title;
+    }
+
+    // Spires at the other end of this spire's roads (side = which end this spire is on)
+    function roadEnds(id, side) {
+      const other = side === 'to' ? 'from' : 'to';
+      return [...new Set(window.CONDUITS.filter(c => c[side] === id).map(c => c[other]))];
+    }
+
+    // Card links: a URL opens in a new tab; a link with "do" runs actions (e.g. start talking)
+    let cardLinkActions = [];
+    function cardLinks(links) {
+      if (!(links || []).length) return '';
+      cardLinkActions = links.map(l => l.do || null);
+      return `<div class="spire-links">${links.map((l, i) => l.do
+        ? `<button class="spire-link" data-link-act="${i}">${escapeHtml(l.label)}</button>`
+        : `<a class="spire-link" href="${escapeHtml(l.url)}" target="_blank" rel="noopener">${escapeHtml(l.label)} <span>↗</span></a>`).join('')}</div>`;
+    }
+    document.addEventListener('click', e => {
+      const b = e.target.closest('[data-link-act]');
+      if (b) (cardLinkActions[+b.dataset.linkAct] || []).forEach(act);
+    });
+
+    function escapeHtml(text) {
+      return String(text).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
     }
 
     function refLocation(ref) {

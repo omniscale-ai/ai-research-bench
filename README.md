@@ -6,6 +6,9 @@ An interactive 3D illustration of **“AI-Research Agents in the Wild. From GitH
 Open `index.html` (or the GitHub Pages site of this repository) and press **▶ Tour** for a 9-stop guided story:
 Space / → next, ← back, Esc exit; `#tour=N` links straight to a stop.
 
+**City / Metro** (switch at the top, or `#view=metro`): the same spec as a metro diagram — one line per district,
+interchanges where the story changes lines (click one for why). The tour works in both views.
+
 ## How to read the map
 | On the map | Meaning |
 | :--- | :--- |
@@ -16,6 +19,7 @@ Space / → next, ← back, Esc exit; `#tour=N` links straight to a stop.
 | 🔭 **Observatory** | The study's instruments: coding, checks, audits, scores |
 | 📡 **TV tower** | Intake channels through which records entered the registry |
 | Scaffolding / ghost | Partly fills the empty cell (2 of 3 clauses) / does not work or has no code |
+| ⇄ **Metro interchange** | Where the argument crosses districts: registry ↔ lineages, ranking, the empty cell, the judge that breaks R5, hubs ↔ lineages |
 | 🎯 **Targets R1–R6** | Candidate regularities; pin colour = verdict, green arcs = supporting evidence, red arcs = counterevidence |
 | ▦ **Plazas** | Tables painted on the ground: roles (84 coded agents among 139 artifacts), the six rules and their verdicts, the design space (judge × selection signal, with expected counts) and Table 7's cost × ambition matrix with rules (a)/(b) |
 | Weather, traffic, queues | Limitations drawn on the finding they weaken |

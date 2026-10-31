@@ -505,7 +505,7 @@
       "title": "Seed-line lineage",
       "code": "LINEAGE",
       "codename": "SEED-LINE · 19",
-      "scale_level": 0.98,
+      "scale_level": 0.95,
       "place": [
         -440,
         230
@@ -525,7 +525,7 @@
       "title": "DSPy line lineage",
       "code": "LINEAGE",
       "codename": "DSPY LINE · 2",
-      "scale_level": 0.6,
+      "scale_level": -0.06,
       "place": [
         -140,
         230
@@ -545,7 +545,7 @@
       "title": "Multi-agent scientist lineage",
       "code": "LINEAGE",
       "codename": "MULTI-AGENT SCIENTIST · 7",
-      "scale_level": 0.71,
+      "scale_level": 0.36,
       "place": [
         -440,
         80
@@ -565,7 +565,7 @@
       "title": "Clune-lab open-endedness lineage",
       "code": "LINEAGE",
       "codename": "CLUNE-LAB OPEN-ENDEDNESS · 5",
-      "scale_level": 0.66,
+      "scale_level": 0.22,
       "place": [
         -290,
         80
@@ -585,7 +585,7 @@
       "title": "Deep research agents lineage",
       "code": "LINEAGE",
       "codename": "DEEP RESEARCH AGENTS · 10",
-      "scale_level": 0.78,
+      "scale_level": 0.54,
       "place": [
         -140,
         80
@@ -605,7 +605,7 @@
       "title": "RL post-training lineage",
       "code": "LINEAGE",
       "codename": "RL POST-TRAINING · 8",
-      "scale_level": 0.73,
+      "scale_level": 0.42,
       "place": [
         -440,
         -70
@@ -625,7 +625,7 @@
       "title": "Physical robotic automation lineage",
       "code": "LINEAGE",
       "codename": "PHYSICAL ROBOTIC AUTOMATION · 2",
-      "scale_level": 0.6,
+      "scale_level": -0.06,
       "place": [
         -200,
         -70
@@ -645,7 +645,7 @@
       "title": "MLAgentBench-derived lineage",
       "code": "LINEAGE",
       "codename": "MLAGENTBENCH-DERIVED · 4",
-      "scale_level": 0.64,
+      "scale_level": 0.14,
       "place": [
         -440,
         -220
@@ -665,7 +665,7 @@
       "title": "CAMEL-AI line lineage",
       "code": "LINEAGE",
       "codename": "CAMEL-AI LINE · 2",
-      "scale_level": 0.6,
+      "scale_level": -0.06,
       "place": [
         -200,
         -220
@@ -685,7 +685,7 @@
       "title": "Judge uncalibrated",
       "code": "ANTIPATTERN",
       "codename": "JUDGE UNCALIBRATED",
-      "scale_level": 0.98,
+      "scale_level": 0.95,
       "place": [
         -455,
         220
@@ -705,7 +705,7 @@
       "title": "Eval-discipline regression",
       "code": "ANTIPATTERN",
       "codename": "EVAL-DISCIPLINE REGRES",
-      "scale_level": 0.7,
+      "scale_level": -0.04,
       "place": [
         -285,
         220
@@ -725,7 +725,7 @@
       "title": "Calibration claimed, not shipped",
       "code": "ANTIPATTERN",
       "codename": "CALIBRATION CLAIMED, N",
-      "scale_level": 0.66,
+      "scale_level": -0.19,
       "place": [
         -115,
         220
@@ -745,7 +745,7 @@
       "title": "Cadence claim vs artifact",
       "code": "ANTIPATTERN",
       "codename": "CADENCE CLAIM VS ARTIF",
-      "scale_level": 0.66,
+      "scale_level": -0.19,
       "place": [
         -455,
         90
@@ -765,7 +765,7 @@
       "title": "Mutable evaluation code",
       "code": "ANTIPATTERN",
       "codename": "MUTABLE EVALUATION COD",
-      "scale_level": 0.63,
+      "scale_level": -0.3,
       "place": [
         -285,
         90
@@ -785,7 +785,7 @@
       "title": "README-only full pipeline",
       "code": "ANTIPATTERN",
       "codename": "README-ONLY FULL PIPEL",
-      "scale_level": 0.63,
+      "scale_level": -0.3,
       "place": [
         -115,
         90
@@ -805,7 +805,7 @@
       "title": "Public shell, off-repo code",
       "code": "ANTIPATTERN",
       "codename": "PUBLIC SHELL, OFF-REPO",
-      "scale_level": 0.63,
+      "scale_level": -0.3,
       "place": [
         -455,
         -40
@@ -825,7 +825,7 @@
       "title": "Fork without pruning",
       "code": "ANTIPATTERN",
       "codename": "FORK WITHOUT PRUNING",
-      "scale_level": 0.63,
+      "scale_level": -0.3,
       "place": [
         -285,
         -40
@@ -845,7 +845,7 @@
       "title": "Star-prompt runtime",
       "code": "ANTIPATTERN",
       "codename": "STAR-PROMPT RUNTIME",
-      "scale_level": 0.63,
+      "scale_level": -0.3,
       "place": [
         -115,
         -40
@@ -2157,5 +2157,132 @@
         "bearing": -14
       }
     }
-  ]
+  ],
+  "metro": {
+    "lines": {
+      "@dist-population": {
+        "order": [
+          "@spire-curated",
+          "@spire-synthesis",
+          "@spire-otherchannels",
+          "@spire-reporeg",
+          "@plaza-roles",
+          "@spire-unaffiliated",
+          "@plaza-rules"
+        ]
+      },
+      "@dist-design": {
+        "order": [
+          "@spire-school-seed-line",
+          "@spire-school-dspy-line",
+          "@spire-school-multi-agent-scientist",
+          "@plaza-design",
+          "@spire-school-dr-deep-research-agent",
+          "@spire-school-rl-post-training-as-autoresearch",
+          "@spire-school-clune-lab-open-endedness",
+          "@spire-school-mlagentbench-derived",
+          "@spire-school-physical-robotic-automation",
+          "@spire-school-camel-ai-line"
+        ]
+      },
+      "@dist-failures": {
+        "order": [
+          "@spire-patterns",
+          "@spire-ranking",
+          "@spire-ap-eval-discipline-regression",
+          "@spire-ap-calibration-claimed-not-shipped",
+          "@spire-ap-judge-uncalibrated",
+          "@plaza-uncal",
+          "@spire-ap-mutable-evaluation-code-as-gaming-surface",
+          "@spire-ap-cadence-claim-vs-artifact-divergence",
+          "@spire-ap-readme-only-full-pipeline",
+          "@spire-ap-public-shell-for-off-repo-implementation",
+          "@spire-ap-fork-without-pruning",
+          "@spire-ap-star-prompt-runtime"
+        ]
+      },
+      "@dist-theory": {
+        "order": [
+          "@spire-audit",
+          "@chal-r1",
+          "@chal-r2",
+          "@plaza-cost",
+          "@chal-r3",
+          "@spire-retest",
+          "@spire-virtualbiotech",
+          "@spire-xscientist",
+          "@spire-agenticop",
+          "@chal-r4",
+          "@chal-r5",
+          "@chal-r6"
+        ]
+      },
+      "@dist-papers": {
+        "order": [
+          "@spire-arxiv",
+          "@spire-hub-agentlab",
+          "@spire-hub-aiscientist",
+          "@spire-hub-mlagentbench",
+          "@spire-hub-airesearcher",
+          "@spire-hub-nanoresearch",
+          "@spire-hub-researchagent",
+          "@spire-authorship"
+        ]
+      }
+    },
+    "interchanges": [
+      {
+        "id": "registry",
+        "label": "Registry",
+        "members": [
+          "@spire-reporeg",
+          "@spire-school-seed-line",
+          "@spire-patterns",
+          "@spire-audit"
+        ],
+        "title": "Where every record starts",
+        "text": "All 139 canonical records enter through the registry. From here 52 of them are grouped into the nine lineages (design line), recurring designs and failures are promoted into the 54-record pattern compendium (failure line), and 25 newly ingested repositories go to the prospective audit that puts the six rules on trial (theory line)."
+      },
+      {
+        "id": "lineages-ranking",
+        "label": "Lineages & Tier S",
+        "members": [
+          "@spire-school-multi-agent-scientist",
+          "@spire-ranking"
+        ],
+        "title": "Where the leading failures live",
+        "text": "The two antipatterns in Tier S concentrate in the multi-agent-scientist lineage: it holds 6 of the records coded with an uncalibrated judge and 3 of the 4 eval-discipline-regression cases. Lineage membership also feeds the ranking's c term — a pattern seen in several lineages scores higher."
+      },
+      {
+        "id": "empty-cell",
+        "label": "Empty cell · R3",
+        "members": [
+          "@plaza-design",
+          "@chal-r3"
+        ],
+        "title": "From the design space to rule R3",
+        "text": "The fenced cell of the design-space plaza — no clean loop keeps a vector of LLM judgments — is exactly the absence that rule R3 states. Transfer here to follow the claim onto the theory line, where it was fixed in advance and then attacked by a 962-repository re-test."
+      },
+      {
+        "id": "judge-r5",
+        "label": "Judge uncalibrated · R5",
+        "members": [
+          "@spire-ap-judge-uncalibrated",
+          "@chal-r5"
+        ],
+        "title": "The failure that breaks R5",
+        "text": "R5 proposed that design patterns stay inside one or two lineages. The uncalibrated LLM judge is coded in 7 of the 9 lineages, while architecture patterns stay within two — so this failure is the counterexample that contradicts the broad form of R5 (paper v1 says four lineages)."
+      },
+      {
+        "id": "hubs-lineages",
+        "label": "Hubs & lineages",
+        "members": [
+          "@spire-hub-aiscientist",
+          "@spire-school-clune-lab-open-endedness"
+        ],
+        "title": "From the papers' favourite systems to their lineages",
+        "text": "The repositories that papers link to most are lineage members: The AI Scientist belongs to the Clune and multi-agent-scientist lineages; Agent Laboratory, AI-Researcher and NanoResearch to multi-agent scientist; MLAgentBench to its own lineage. Transfer here to go from the curated paper graph to how these systems are built."
+      }
+    ]
+  }
 }
